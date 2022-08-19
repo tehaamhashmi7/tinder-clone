@@ -51,7 +51,7 @@ function TinderCards() {
                   sx={{
                     position: "absolute",
                     bottom: 0,
-                    margin: "2-0px",
+                    margin: "20px",
                     color: "#fff",
                   }}
                   variant="h4"
