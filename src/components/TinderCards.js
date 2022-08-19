@@ -37,7 +37,7 @@ function TinderCards() {
             onCardLeftScreen={() => outOfFrame(person.name)}
             className="card"
           >
-            <Paper elevation={4} sx={{ width: "100%", height: "100%" }}>
+            <Paper elevation={4} sx={{ width: "100%", height: "100%", 'borderRadius': '20px' }}>
               <Box
                 sx={{
                   backgroundImage: "url(" + person.url + ")",
@@ -45,6 +45,7 @@ function TinderCards() {
                   height: "100%",
                   backgroundSize: "cover",
                   backgroundPosition: "center",
+                  'borderRadius': '20px'
                 }}
               >
                 <Typography
