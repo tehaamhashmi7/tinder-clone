@@ -1,19 +1,41 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Box, Paper, Typography } from "@mui/material";
 import TinderCard from "react-tinder-card";
 import { SwipeDown } from "@mui/icons-material";
 
-function TinderCards() {
-  const [peeps, setPeople] = useState([
-    {
-      name: "Elon Musk",
-      url: "https://image.cnbcfm.com/api/v1/image/107101580-1660095651939-gettyimages-1395371348-dk023772_07aa4cd1-36c0-4f46-9752-7e238d4fb187.jpeg?v=1660097048",
-    },
-    {
-      name: "Jeff Bezos",
-      url: "https://assets.wired.com/photos/w_730/wp-content/uploads/2019/01/Culture_GeeksGuide_Bezos.jpg",
-    },
-  ]);
+ function TinderCards() {
+  const [peeps, setPeople] = useState([]);
+  const [imgUrl, setUrl] = useState(null)
+
+  const getAllUsers = async () => {
+    const response = await fetch('http://localhost:1003/api/user/all', {
+      method: 'GET',
+      headers: {
+          'Content-Type': 'application/json'
+      }
+    })
+
+    const json = await response.json()
+    let data = json.allUsers
+    return data
+  }
+
+  useEffect( () => {
+      async function fetchData() {
+      let myArr = await getAllUsers()
+      setPeople(myArr)
+    }
+    fetchData()
+  }
+    , [])
+
+
+  const memoisedState = useMemo(() => {
+    return peeps
+  }, [peeps])  
+
+    console.log(peeps)
+
 
   const swiped = (direction, nameToDelete) => {
     console.log("Removing " + nameToDelete);
@@ -24,23 +46,42 @@ function TinderCards() {
     console.log(name + " left the screen");
   };
 
+  function _arrayBufferToBase64(buffer) {
+    var binary = ''
+    var bytes = new Uint8Array(buffer)
+    var len = bytes.byteLength
+    for (var i = 0; i < len; i++) {
+      binary += String.fromCharCode(bytes[i])
+    }
+    return window.btoa(binary)
+  }
+
   return (
     <Box>
       <Box
         sx={{ display: "flex", justifyContent: "center", "margin-top": "10vh" }}
       >
-        {peeps.map((person) => (
-          <TinderCard
+        {peeps.map((person, index) => {
+
+          {/* const base64String = btoa(String.fromCharCode(...new Uint8Array(person.image.data.data)))
+          console.log(base64String) */}
+
+          const baseString = _arrayBufferToBase64(person.image.data.data)
+
+          console.log(baseString)
+
+          return <TinderCard
             preventSwipe={["up", "down"]}
-            key={person.name}
+            key={index}
             onSwipe={(dir) => swiped(dir, person.name)}
             onCardLeftScreen={() => outOfFrame(person.name)}
             className="card"
           >
             <Paper elevation={4} sx={{ width: "100%", height: "100%", 'borderRadius': '20px' }}>
+              {/* <img src={`data:image/png,base64,${base64String}`} alt="Not found"/> */}
               <Box
                 sx={{
-                  backgroundImage: "url(" + person.url + ")",
+                  backgroundImage: "url(" + `data:image/png;base64,${baseString}` + ")",
                   width: "100%",
                   height: "100%",
                   backgroundSize: "cover",
@@ -62,7 +103,7 @@ function TinderCards() {
               </Box>
             </Paper>
           </TinderCard>
-        ))}
+        })}
       </Box>
     </Box>
   );

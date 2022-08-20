@@ -30,8 +30,8 @@ function IconBar() {
           justifyContent: "space-between",
         }}
       >
-        {icons.map((icono) => (
-          <SwipeButton icon={icono} />
+        {icons.map((icono, index) => (
+          <SwipeButton key={index} icon={icono} />
         ))}
       </BottomNavigation>
     </Stack>
