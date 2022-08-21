@@ -1,6 +1,5 @@
 import { Avatar, IconButton, Paper } from '@mui/material'
 import React from 'react'
-import ReplayIcon from '@mui/icons-material/Replay';
 
 function SwipeButton(props) {
     const iconColor = props.color

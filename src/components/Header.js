@@ -10,9 +10,11 @@ function Header() {
   const [anchorProfile, toggleProfile] = useState(null);
   const openProfile = Boolean(anchorProfile);
 
-  const profileLinks = [{name: 'Signup', path: '/signup'},
-                        {name: 'Login', path: '/login'}
-                        ]
+  const token = localStorage.getItem('token')
+
+  const profileLinks = (!token ? [{name: 'Signup', path: '/signup'},
+  {name: 'Login', path: '/login'}
+  ] : [{name: 'Your Profile', path: '/myProfile'}, {name: 'Logout', path: '/logout'}])
 
   return (
     <Stack direction={"column"}>

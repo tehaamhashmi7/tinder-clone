@@ -11,8 +11,13 @@ import React, { useState } from "react";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import { upload } from "@testing-library/user-event/dist/upload";
+import { useNavigate } from "react-router-dom";
 
 function Signup() {
+
+  const navigate = useNavigate()
+
   const [showPassword, setShow] = useState(false);
 
   const [credentials, setCredentials] = useState({
@@ -20,13 +25,52 @@ function Signup() {
     email: "",
     password: "",
     confirmPass: "",
-    dob: "",
-    file: null,
+    dob: ""
   });
+
+  const [files, setFile] = useState(null)
+
+  
+
+  const addToDatabase = async () => {
+
+    const formData = new FormData()
+    formData.append('name', credentials.name)
+    formData.append('email', credentials.email)
+    formData.append('password', credentials.password)
+    formData.append('dob', credentials.dob)
+    formData.append('image', files)
+
+    const response = await fetch('http://localhost:1003/api/user/add', {
+        method: 'POST',
+        headers: {
+
+        },
+        body: formData
+    })
+    const json = await response.json()
+    if (json.success) {
+      localStorage.setItem('token', json.token)
+      navigate('/home')
+    }
+  }
 
   const handleChange = (eve) => {
     setCredentials({ ...credentials, [eve.target.name]: eve.target.value });
   };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    await addToDatabase()
+  }
+
+  // const uploadFile = async (e) => {
+  //   const myFile = await e.target.files
+  //   console.log(myFile)
+  //   setFile(e.target.files[0])
+  //   console.log(files)
+    
+  // }
 
   return (
     <Grid container>
@@ -36,18 +80,18 @@ function Signup() {
           p={1}
           spacing={4}
           direction={"column"}
-          fullWidth
+          fullwidth='true'
           textAlign={"center"}
         >
           <Typography variant="h3" sx={{ fontWeight: "700" }}>
             Sign Up
           </Typography>
-          <form>
-            <Stack direction={"column"} fullWidth p={2} spacing={3}>
+          <form onSubmit={handleSubmit}>
+            <Stack direction={"column"} fullwidth='true' p={2} spacing={3}>
               <TextField
                 type={"text"}
                 label={"Name"}
-                fullWidth
+                fullwidth='true'
                 required
                 name="name"
                 value={credentials.name}
@@ -56,7 +100,7 @@ function Signup() {
               <TextField
                 type={"email"}
                 label={"Email"}
-                fullWidth
+                fullwidth='true'
                 required
                 name="email"
                 value={credentials.email}
@@ -65,7 +109,7 @@ function Signup() {
               <TextField
                 type={"number"}
                 label={"Year of birth"}
-                fullWidth
+                fullwidth='true'
                 required
                 name="dob"
                 value={credentials.dob}
@@ -74,7 +118,7 @@ function Signup() {
               <TextField
                 type={showPassword ? "text" : "password"}
                 label={"Password"}
-                fullWidth
+                fullwidth='true'
                 required
                 name="password"
                 value={credentials.password}
@@ -108,7 +152,7 @@ function Signup() {
               <TextField
                 type={showPassword ? "text" : "password"}
                 label={"Confirm Password"}
-                fullWidth
+                fullwidth='true'
                 name="confirmPass"
                 value={credentials.confirmPass}
                 onChange={handleChange}
@@ -123,11 +167,10 @@ function Signup() {
                     </InputAdornment>
                   ),
                 }}
-                name="file"
-                value={credentials.file}
-                onChange={handleChange}
+                name="img"
+                onChange={(e) => setFile(e.target.files[0])}
               />
-              <Button variant="contained" type="submit" fullWidth>
+              <Button variant="contained" type="submit" fullwidth='true'>
                 Submit
               </Button>
             </Stack>
