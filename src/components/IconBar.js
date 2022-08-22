@@ -22,8 +22,8 @@ function IconBar() {
         sx={{
           position: "absolute",
           bottom: 0,
-          "margin-left": "30px",
-          "margin-right": "30px",
+          "marginLeft": "30px",
+          "marginRight": "30px",
           width: "80%",
           height: "15%",
           display: "flex",

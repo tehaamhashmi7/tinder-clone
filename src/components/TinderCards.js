@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Box, Paper, Typography } from "@mui/material";
+import { Box, CircularProgress, Paper, Typography } from "@mui/material";
 import TinderCard from "react-tinder-card";
 
 function TinderCards() {
-  const [peeps, setPeople] = useState([]);
+  const [peeps, setPeople] = useState(null);
 
   const getAllUsers = async () => {
     const response = await fetch("http://localhost:1003/api/user/all", {
@@ -50,9 +50,9 @@ function TinderCards() {
   return (
     <Box>
       <Box
-        sx={{ display: "flex", justifyContent: "center", "margin-top": "10vh" }}
+        sx={{ display: "flex", justifyContent: "center", "marginTop": "10vh" }}
       >
-        {peeps.map((person, index) => {
+          {peeps? peeps.map((person, index) => {
           const baseString = _arrayBufferToBase64(person.image.data.data);
 
           return (
@@ -93,8 +93,8 @@ function TinderCards() {
               </Paper>
             </TinderCard>
           );
-        })}
-      </Box>
+        }) : <CircularProgress />}
+      </Box> 
     </Box>
   );
 }

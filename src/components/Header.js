@@ -4,9 +4,12 @@ import PersonIcon from "@mui/icons-material/Person";
 import WhatshotIcon from "@mui/icons-material/Whatshot";
 import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
 import { Stack } from "@mui/system";
-import {Link} from 'react-router-dom'
+import {Link, useNavigate} from 'react-router-dom'
 
 function Header() {
+
+  const navigate = useNavigate()
+
   const [anchorProfile, toggleProfile] = useState(null);
   const openProfile = Boolean(anchorProfile);
 
@@ -15,6 +18,12 @@ function Header() {
   const profileLinks = (!token ? [{name: 'Signup', path: '/signup'},
   {name: 'Login', path: '/login'}
   ] : [{name: 'Your Profile', path: '/myProfile'}, {name: 'Logout', path: '/logout'}])
+
+
+  const handleLogout = () => {
+    localStorage.clear()
+    navigate('/')
+  }
 
   return (
     <Stack direction={"column"}>
@@ -88,7 +97,7 @@ function Header() {
             if (data.name == "Logout") {
               return (
                 <MenuItem key={"logout"} onClick={() => toggleProfile(null)}>
-                  <Button variant="text" size="small">
+                  <Button variant="text" size="small" onClick={handleLogout}>
                     {data.name}
                   </Button>
                 </MenuItem>
